@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ description or site.description }}">
+    <meta name="theme-color" content="#132a24">
+    <meta property="og:type" content="{% if page.fileSlug %}article{% else %}website{% endif %}">
+    <meta property="og:locale" content="{{ site.locale }}">
+    <meta property="og:title" content="{% if title %}{{ title }} · {% endif %}{{ site.title }}">
+    <meta property="og:description" content="{{ description or site.description }}">
+    <meta property="og:url" content="{{ site.origin }}{{ page.url | url }}">
+    <link rel="canonical" href="{{ site.origin }}{{ page.url | url }}">
+    <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳至主要內容</a>
+
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="{{ '/' | url }}" aria-label="{{ site.title }}首頁">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span class="brand-copy">
+            <strong>{{ site.shortTitle }}</strong>
+            <small>Build · Learn · Share</small>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="主要導覽">
+          <a href="{{ '/' | url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>文章</a>
+          <a href="{{ '/about/' | url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>關於</a>
+          <a class="nav-github" href="https://github.com/{{ site.repository }}" target="_blank" rel="noreferrer">
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      {{ content | safe }}
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <p>© {{ site.currentYear }} {{ site.author }}. 文字與程式，持續生長。</p>
+        <p>Built with Node.js + Eleventy · Hosted on GitHub Pages</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
