@@ -74,6 +74,7 @@ GITHUB_CLIENT_SECRET=你的密鑰
 
 | 症狀 | 處理 |
 | --- | --- |
+| 登入彈窗顯示 `DNS_PROBE_FINISHED_NXDOMAIN`、網址是 `replace-me.workers.dev` | `src/admin/config.yml` 的 `base_url` 還是預留值，照上面第 2、3 步部署並回填。**本機開發**則不需要 Worker，改跑 `npm run dev:cms` 起本機代理即可 |
 | 登入彈窗一閃即逝、顯示 Authentication Aborted | 網站的 `Cross-Origin-Opener-Policy` 會破壞 OAuth 彈窗，改為 `same-origin-allow-popups` |
 | 顯示「授權狀態驗證失敗」 | cookie 被瀏覽器擋掉，確認未封鎖第三方 cookie，或改用同網域部署 Worker |
 | 顯示「GitHub 拒絕了這次授權」 | 確認該帳號對 `backend.repo` 指定的倉庫有寫入權限 |

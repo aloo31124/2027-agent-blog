@@ -100,7 +100,30 @@ npx wrangler secret put GITHUB_CLIENT_SECRET
 npm run dev
 ```
 
-Eleventy 會啟動本機預覽伺服器並即時重載。本機不需要 OAuth Worker；若要在本機試後台，另開一個終端機執行 Decap 的本機代理，並在 `config.yml` 暫時加上 `local_backend: true`。
+Eleventy 會啟動本機預覽伺服器並即時重載。
+
+要在本機試後台，**另開一個終端機**啟動 Decap 的本機代理：
+
+```bash
+npm run dev:cms
+```
+
+兩個都跑起來之後開 <http://localhost:8080/admin/>，會看到一個「登入」按鈕，按下去直接進後台。
+
+- `config.yml` 已內建 `local_backend: true`。Decap 只在主機名是 `localhost`／`127.0.0.1`、
+  且偵測得到 `http://localhost:8081` 的代理時才會切到本機模式，所以線上部署不受影響。
+- **沒開代理就開後台**的話，Decap 會退回 GitHub backend、彈出 `base_url` 指定的 OAuth 網址；
+  本機並沒有 Worker，若 `base_url` 還是預留值就會出現 `DNS_PROBE_FINISHED_NXDOMAIN`。
+- 代理預設是檔案系統模式（`local_fs`），編輯直接寫進 `src/posts/`，Eleventy 立刻重載。
+  這個模式不支援 editorial workflow，Decap 會自動降級成 `simple` 並在 console 說明；
+  線上仍然是 `editorial_workflow`（FR-007）。要在本機重現送 PR 的流程，改用 git 模式：
+
+  ```bash
+  $env:MODE = "git"; npm run dev:cms
+  ```
+
+  （PowerShell 寫法；bash 為 `MODE=git npm run dev:cms`。）
+  git 模式會在你的工作目錄真的建立 `cms/*` 分支並提交，用完記得清掉。
 
 ## 驗收流程
 

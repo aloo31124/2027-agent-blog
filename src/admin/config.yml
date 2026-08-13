@@ -7,9 +7,19 @@ backend:
   name: github
   repo: aloo31124/2027-agent-blog
   branch: main
-  # 部署 OAuth Worker 後改成你的 Worker 網域（見 infra/oauth-worker/README.md）
+  # 部署 OAuth Worker 後改成你的 Worker 網域（見 infra/oauth-worker/README.md）。
+  # 還是 REPLACE-ME 的話，線上後台按登入只會連到不存在的網域（DNS_PROBE_FINISHED_NXDOMAIN）。
   base_url: https://REPLACE-ME.workers.dev
   auth_endpoint: auth
+
+# 本機開發用（FR 無關，純開發便利性）。
+# Decap 只在網址主機名是 localhost／127.0.0.1 時才理會這個設定，
+# 且必須先偵測到 http://localhost:8081 的本機代理才會切過去；
+# 兩者有一個不成立就退回上面的 github backend。因此線上部署完全不受影響。
+#
+# 用法：另開一個終端機執行 `npm run dev:cms`，再開 http://localhost:8080/admin/。
+# 沒開代理就開後台的話，Decap 會走 GitHub 登入，而本機並沒有 OAuth Worker 可用。
+local_backend: true
 
 # 審核流程的唯一來源（FR-007）：每筆未發佈內容會建立分支並開 PR，
 # 由管理員核可合併後才會上線。不可移除。

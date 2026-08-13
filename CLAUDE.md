@@ -19,6 +19,7 @@ test/           # node --test 測試
 
 ```bash
 npm run dev      # 本機預覽（Eleventy serve）
+npm run dev:cms  # 本機後台代理（另開終端機，配合 config.yml 的 local_backend）
 npm run build    # 建置到 _site
 npm run verify   # 內容驗證 + 建置產物驗證（部署前閘門）
 npm test         # 建置後執行 node --test

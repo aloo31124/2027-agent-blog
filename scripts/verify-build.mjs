@@ -113,6 +113,21 @@ console.log(
     `${drafts.length} 篇草稿確認未外洩。最新一篇可由 ${newestUrl} 存取。`
 );
 
+// --- 後台登入設定：只警告，不中止 ------------------------------------------
+//
+// base_url 還是 REPLACE-ME 的話，線上後台按登入會連到不存在的網域
+// （DNS_PROBE_FINISHED_NXDOMAIN）。但這只影響後台登入，讀者端的網站完全正常，
+// 所以這裡刻意「不」讓 assert 失敗——為了尚未設定的後台而擋掉整包部署，
+// 反而會讓讀者看不到新文章，比原本的問題更糟。
+const adminConfig = readFileSync(resolve(outputDirectory, "admin/config.yml"), "utf8");
+if (/REPLACE-ME/.test(adminConfig)) {
+  console.warn(
+    "⚠ src/admin/config.yml 的 backend.base_url 仍是預留值，線上後台將無法登入。\n" +
+      "  部署 OAuth Worker 後回填即可，步驟見 infra/oauth-worker/README.md。\n" +
+      "  （本機開發不需要 Worker：npm run dev:cms 另開本機代理即可。）"
+  );
+}
+
 // --- 輔助 ------------------------------------------------------------------
 
 function readPosts() {
