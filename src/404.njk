@@ -1,0 +1,17 @@
+---
+layout: layouts/base.njk
+title: 找不到頁面
+description: 這個網址沒有對應的頁面。
+permalink: /404.html
+eleventyExcludeFromCollections: true
+---
+<section class="not-found shell">
+  <p class="not-found-code" aria-hidden="true">404</p>
+  <div>
+    <p class="eyebrow">Page not found</p>
+    <h1>這頁可能去散步了。</h1>
+    <p>網址不存在，或內容已經移到別處。回到首頁繼續閱讀吧。</p>
+    <a class="button" href="{{ '/' | url }}">回到首頁 <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+

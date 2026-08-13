@@ -1,0 +1,41 @@
+---
+layout: layouts/base.njk
+---
+<article class="post">
+  <header class="post-header shell">
+    <a class="eyebrow back-link" href="{{ '/' | url }}">← 回到文章列表</a>
+    <h1>{{ title }}</h1>
+    <p class="post-lead">{{ description }}</p>
+    <div class="post-meta">
+      <time datetime="{{ date | htmlDateString }}">{{ date | readableDate }}</time>
+      <span aria-hidden="true">·</span>
+      <span>{{ readingTime }} 分鐘閱讀</span>
+    </div>
+  </header>
+
+  <div class="post-grid shell">
+    <aside class="post-aside" aria-label="文章資訊">
+      <span class="aside-label">Filed under</span>
+      <ul class="tag-list">
+        {% for tag in tags %}
+          {% if tag != "post" %}<li>{{ tag }}</li>{% endif %}
+        {% endfor %}
+      </ul>
+      <span class="issue-number" aria-hidden="true">01</span>
+    </aside>
+
+    <div class="prose">
+      {{ content | safe }}
+    </div>
+  </div>
+
+  <section class="post-cta shell" aria-labelledby="post-cta-title">
+    <p class="eyebrow">Next note</p>
+    <h2 id="post-cta-title">下一篇，從你的問題開始。</h2>
+    <p>複製文章範本、換上自己的標題與內容，推送後就會自動發布。</p>
+    <a class="text-link" href="https://github.com/{{ site.repository }}/tree/main/src/posts" target="_blank" rel="noreferrer">
+      查看文章原始檔 <span aria-hidden="true">↗</span>
+    </a>
+  </section>
+</article>
+
