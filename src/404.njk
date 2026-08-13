@@ -1,0 +1,19 @@
+---
+layout: layouts/base.njk
+title: 找不到這個頁面
+permalink: 404.html
+eleventyExcludeFromCollections: true
+---
+{#-
+  除了一般的網址打錯之外，這一頁也承接兩種情況（FR-014b）：
+  文章被下架、或網址代稱被改過，舊連結會落在這裡。
+-#}
+<h1>找不到這個頁面</h1>
+
+<p>你要找的頁面不存在。可能是網址打錯了，也可能這篇文章已經被下架或換了網址。</p>
+
+<ul>
+  <li><a href="{{ '/' | url }}">回到首頁</a></li>
+  <li><a href="{{ '/tags/' | url }}">依標籤瀏覽文章</a></li>
+  <li><a href="{{ '/about/' | url }}">關於這個部落格</a></li>
+</ul>

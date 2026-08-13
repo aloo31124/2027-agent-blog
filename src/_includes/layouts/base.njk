@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if title %}{{ title }}｜{{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="description" content="{{ description or site.description }}">
+    <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+
+    <header class="site-header">
+      <a class="site-title" href="{{ '/' | url }}">{{ site.title }}</a>
+      <nav aria-label="主要導覽">
+        <ul class="nav-list">
+          <li><a href="{{ '/' | url }}">文章</a></li>
+          <li><a href="{{ '/tags/' | url }}">標籤</a></li>
+          <li><a href="{{ '/about/' | url }}">關於</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      {{ content | safe }}
+    </main>
+
+    <footer class="site-footer">
+      <p>{{ site.title }}　·　由 {{ site.author }} 撰寫</p>
+    </footer>
+  </body>
+</html>

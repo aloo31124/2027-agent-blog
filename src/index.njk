@@ -1,0 +1,51 @@
+---
+layout: layouts/base.njk
+eleventyExcludeFromCollections: true
+pagination:
+  data: collections.posts
+  # 每頁篇數。site.postsPerPage 為此值的說明來源，
+  # 兩者一致性由 test/site.test.mjs 驗證（Eleventy 的 pagination.size 無法引用 data 檔）。
+  size: 10
+  alias: posts
+  generatePageOnEmptyData: true
+permalink: "{% if pagination.pageNumber == 0 %}/index.html{% else %}/page/{{ pagination.pageNumber + 1 }}/index.html{% endif %}"
+---
+<h1 class="visually-hidden-heading">{{ site.title }}</h1>
+
+{% if posts.length %}
+  <ul class="post-list">
+    {%- for post in posts %}
+      <li>
+        <h2><a href="{{ post.url | url }}">{{ post.data.title }}</a></h2>
+        <p class="post-meta">
+          <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
+          {% if post.data.readingTime %}<span>閱讀約 {{ post.data.readingTime }} 分鐘</span>{% endif %}
+        </p>
+        <p class="post-summary">{{ post.data.description }}</p>
+      </li>
+    {%- endfor %}
+  </ul>
+
+  {% if pagination.pages.length > 1 %}
+    <nav aria-label="文章分頁">
+      <ul class="pagination">
+        <li>
+          {% if pagination.href.previous %}
+            <a href="{{ pagination.href.previous | url }}">← 上一頁</a>
+          {% endif %}
+        </li>
+        <li>第 {{ pagination.pageNumber + 1 }} / {{ pagination.pages.length }} 頁</li>
+        <li>
+          {% if pagination.href.next %}
+            <a href="{{ pagination.href.next | url }}">下一頁 →</a>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
+{% else %}
+  <div class="empty-state">
+    <p>這裡還沒有文章。</p>
+    <p>登入後台寫下第一篇，發佈之後就會出現在這裡。</p>
+  </div>
+{% endif %}

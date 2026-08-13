@@ -1,0 +1,20 @@
+{
+  "name": "2027-agent-blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "有後台可編輯、可快速部屬的個人部落格：靜態公開網站 + 瀏覽器後台。",
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "dev": "eleventy --serve",
+    "start": "eleventy --serve",
+    "verify": "node scripts/check-content.mjs && node scripts/verify-build.mjs",
+    "test": "npm run build && node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.6"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "decap-oauth-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Decap CMS 的 GitHub OAuth 代理，部署於 Cloudflare Workers。",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

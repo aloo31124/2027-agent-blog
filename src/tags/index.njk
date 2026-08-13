@@ -1,0 +1,25 @@
+---
+layout: layouts/base.njk
+title: 所有標籤
+description: 依標籤瀏覽這個部落格的文章。
+permalink: /tags/index.html
+eleventyExcludeFromCollections: true
+---
+<h1>所有標籤</h1>
+
+{% if collections.publicTags.length %}
+  <ul class="tag-list">
+    {%- for tag in collections.publicTags %}
+      <li>
+        <a href="{{ ('/tags/' + tag.slug + '/') | url }}">
+          {{ tag.name }} <span class="tag-count">({{ tag.posts.length }})</span>
+        </a>
+      </li>
+    {%- endfor %}
+  </ul>
+{% else %}
+  <div class="empty-state">
+    <p>還沒有任何標籤。</p>
+    <p>為文章加上標籤後，就能從這裡分類瀏覽。</p>
+  </div>
+{% endif %}

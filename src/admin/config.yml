@@ -1,0 +1,120 @@
+# Decap CMS 設定
+# 契約來源：specs/001-admin-editable-blog/contracts/content-schema.md
+#
+# 只使用與 Sveltia CMS 相容的設定與 widget，保留日後一行切換的退路（research.md R2）。
+
+backend:
+  name: github
+  repo: aloo31124/2027-agent-blog
+  branch: main
+  # 部署 OAuth Worker 後改成你的 Worker 網域（見 infra/oauth-worker/README.md）
+  base_url: https://REPLACE-ME.workers.dev
+  auth_endpoint: auth
+
+# 審核流程的唯一來源（FR-007）：每筆未發佈內容會建立分支並開 PR，
+# 由管理員核可合併後才會上線。不可移除。
+publish_mode: editorial_workflow
+
+media_folder: src/uploads
+public_folder: /uploads
+
+# 註：這裡刻意「沒有」全域的 media_library 區塊。
+# Decap 對它的 schema 要求 `name`，但填 `name: default` 又會讓它去找同名的外部媒體庫並崩潰
+# （decaporg/decap-cms#4094）。因此檔案大小上限改寫在各 image 欄位上（見下方 coverImage）。
+#
+# 這代表 CMS 端的限制只覆蓋欄位上傳，不覆蓋資產庫的直接上傳；
+# 但 FR-020／FR-020a 的真正強制點在 scripts/check-content.mjs——
+# 那一關在部署前執行，繞不過去，超標或格式不符一律中止發佈。
+
+locale: zh_Hant
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    folder: src/posts
+    create: true
+    # 檔名即公開網址：/posts/{檔名}/。日期前綴讓檔名天然唯一且可排序。
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "posts/{{slug}}"
+    summary: "{{title}}　—　{{#if draft}}草稿{{else}}已發佈{{/if}}"
+    sortable_fields: [date, title, author]
+    view_groups:
+      - label: 依作者
+        field: author
+      - label: 依狀態
+        field: draft
+    view_filters:
+      - label: 只看草稿
+        field: draft
+        pattern: true
+      - label: 只看已發佈
+        field: draft
+        pattern: false
+    fields:
+      - name: title
+        label: 標題
+        widget: string
+        required: true
+
+      - name: description
+        label: 摘要
+        widget: text
+        required: true
+        hint: 會顯示在首頁列表與搜尋結果
+
+      - name: date
+        label: 發佈日期
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        picker_utc: false
+        required: true
+
+      # 建立者。作為權限判斷依據，建立後不應變更（FR-008）
+      - name: author
+        label: 作者
+        widget: hidden
+        default: "{{author.login}}"
+
+      - name: draft
+        label: 草稿（打開時不會出現在公開網站）
+        widget: boolean
+        default: true
+        required: true
+
+      - name: tags
+        label: 標籤
+        widget: list
+        default: ["post"]
+        required: true
+        hint: 請保留 post 這個標記，其餘可自由新增
+
+      - name: readingTime
+        label: 閱讀分鐘數
+        widget: number
+        value_type: int
+        min: 1
+        default: 5
+        required: true
+
+      - name: coverImage
+        label: 封面圖
+        widget: image
+        required: false
+        allow_multiple: false
+        # 與 FR-020／FR-020a 一致：不接受 SVG
+        media_library:
+          config:
+            max_file_size: 5242880
+
+      - name: coverImageAlt
+        label: 封面圖替代文字
+        widget: string
+        required: false
+        hint: 有封面圖時務必填寫，供螢幕閱讀器與圖片載入失敗時使用
+
+      - name: body
+        label: 內文
+        widget: markdown
+        required: true

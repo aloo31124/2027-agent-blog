@@ -1,0 +1,103 @@
+---
+permalink: /admin/index.html
+eleventyExcludeFromCollections: true
+---
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>後台｜{{ site.title }}</title>
+    <style>
+      .publish-status {
+        font: 0.9375rem/1.5 system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1rem;
+        padding: 0.625rem 1rem;
+        background: #f6f8fa;
+        border-bottom: 1px solid #d0d7de;
+        color: #1f2328;
+      }
+      .publish-status[data-state="failure"] { background: #fff1f0; border-bottom-color: #d1242f; }
+      .publish-status[data-state="in_progress"] { background: #fff8e5; border-bottom-color: #bf8700; }
+      .publish-status[data-state="success"] { background: #eef8f0; border-bottom-color: #1a7f37; }
+      .publish-status a { color: #0a4fa0; }
+    </style>
+  </head>
+  <body>
+    <!--
+      發佈狀態列（FR-030、FR-031）。
+      查詢公開倉庫最近一次建置，未認證額度為每 IP 每小時 60 次，
+      因此輪詢間隔 30 秒，且僅在分頁可見時查詢。查詢失敗只顯示提示，不阻擋後台。
+    -->
+    <div class="publish-status" id="publish-status" data-state="unknown" role="status" aria-live="polite">
+      <strong>發佈狀態</strong>
+      <span id="publish-status-text">讀取中…</span>
+    </div>
+
+    <script src="https://unpkg.com/decap-cms@^3.9.0/dist/decap-cms.js"></script>
+    <script src="{{ '/admin/preview.js' | url }}"></script>
+
+    <script>
+      (function () {
+        var REPO = {{ site.repo | dump | safe }};
+        var POLL_MS = 30000;
+        var el = document.getElementById("publish-status");
+        var text = document.getElementById("publish-status-text");
+
+        function render(state, message, href) {
+          el.dataset.state = state;
+          text.textContent = message;
+          var existing = document.getElementById("publish-status-link");
+          if (existing) existing.remove();
+          if (href) {
+            var link = document.createElement("a");
+            link.id = "publish-status-link";
+            link.href = href;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = "查看原因";
+            el.appendChild(link);
+          }
+        }
+
+        function describe(run) {
+          if (!run) return render("unknown", "尚無建置紀錄。");
+          var when = new Date(run.updated_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" });
+          if (run.status === "queued" || run.status === "in_progress") {
+            return render("in_progress", "發佈中…（開始於 " + when + "）");
+          }
+          if (run.conclusion === "success") {
+            return render("success", "發佈成功　·　" + when);
+          }
+          return render("failure", "發佈失敗　·　" + when + "　·　線上仍是前一個成功版本", run.html_url);
+        }
+
+        function poll(force) {
+          // 首次載入一定要查一次：分頁若在背景開啟，document.hidden 會是 true，
+          // 若連第一次都跳過，狀態列會永遠卡在「讀取中…」。
+          // 節流只套用在後續的定時輪詢上，用來省 API 額度。
+          if (!force && document.hidden) return;
+          fetch("https://api.github.com/repos/" + REPO + "/actions/runs?per_page=1&branch=main", {
+            headers: { Accept: "application/vnd.github+json" }
+          })
+            .then(function (res) {
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              return res.json();
+            })
+            .then(function (data) { describe((data.workflow_runs || [])[0]); })
+            .catch(function () { render("unknown", "無法取得發佈狀態（不影響後台其他功能）。"); });
+        }
+
+        poll(true);
+        setInterval(function () { poll(false); }, POLL_MS);
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden) poll(true);
+        });
+      })();
+    </script>
+  </body>
+</html>

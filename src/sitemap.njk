@@ -1,0 +1,28 @@
+---
+permalink: sitemap.xml
+eleventyExcludeFromCollections: true
+---
+{#- 僅列出已發佈內容；草稿因 permalink: false 根本不存在，後台頁面刻意排除（FR-027） -#}
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ site.url }}{{ '/' | url }}</loc>
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ '/about/' | url }}</loc>
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ '/tags/' | url }}</loc>
+  </url>
+  {%- for tag in collections.publicTags %}
+  <url>
+    <loc>{{ site.url }}{{ ('/tags/' + tag.slug + '/') | url | encodePath }}</loc>
+  </url>
+  {%- endfor %}
+  {%- for post in collections.posts %}
+  <url>
+    <loc>{{ site.url }}{{ post.url | url | encodePath }}</loc>
+    <lastmod>{{ post.date | htmlDateString }}</lastmod>
+  </url>
+  {%- endfor %}
+</urlset>

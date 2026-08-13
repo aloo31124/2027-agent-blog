@@ -1,0 +1,32 @@
+---
+layout: layouts/base.njk
+---
+<article class="post">
+  <header class="post-header">
+    <h1>{{ title }}</h1>
+    <p class="post-meta">
+      <time datetime="{{ date | htmlDateString }}">{{ date | readableDate }}</time>
+      {% if author %}<span class="post-author">作者：{{ author }}</span>{% endif %}
+      {% if readingTime %}<span class="post-reading-time">閱讀約 {{ readingTime }} 分鐘</span>{% endif %}
+    </p>
+    {% set userTags = [] %}
+    {% for tag in tags %}
+      {% if tag != "post" and tag != "all" %}{% set userTags = (userTags.push(tag), userTags) %}{% endif %}
+    {% endfor %}
+    {% if userTags.length %}
+      <ul class="tag-list" aria-label="文章標籤">
+        {% for tag in userTags %}
+          <li><a href="{{ ('/tags/' + (tag | tagSlug) + '/') | url }}">{{ tag }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </header>
+
+  {% if coverImage %}
+    <img class="post-cover" src="{{ coverImage | url }}" alt="{{ coverImageAlt }}">
+  {% endif %}
+
+  <div class="post-body">
+    {{ content | safe }}
+  </div>
+</article>

@@ -1,0 +1,15 @@
+name = "decap-oauth-proxy"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+[vars]
+# 你的 GitHub OAuth App 的 Client ID（可公開）
+GITHUB_CLIENT_ID = "REPLACE-ME"
+
+# 後台所在的網站來源，postMessage 只會送到這個來源。
+# 不要留結尾斜線，例如 https://aloo31124.github.io
+ALLOWED_ORIGIN = "https://REPLACE-ME.github.io"
+
+# GITHUB_CLIENT_SECRET 不寫在這裡。
+# 以指令設定，避免進版控：
+#   npx wrangler secret put GITHUB_CLIENT_SECRET

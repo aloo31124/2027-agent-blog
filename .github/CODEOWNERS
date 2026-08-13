@@ -1,0 +1,20 @@
+# 文章與媒體的變更需要管理員核可（FR-006、FR-007）。
+#
+# 這份檔案本身不會強制任何事——必須搭配 main 的分支保護規則：
+#   Settings → Branches → Add rule → main
+#     ☑ Require a pull request before merging
+#     ☑ Require approvals（至少 1）
+#     ☑ Require review from Code Owners
+#
+# 設定完成後，作者（Write 權限）在後台按下發佈只會產生待審核的 PR，
+# 必須由下列管理員核可合併才會真的上線。
+
+/src/posts/    @aloo31124
+/src/uploads/  @aloo31124
+
+# 設定與流程的變更同樣需要管理員核可
+/src/admin/                @aloo31124
+/.github/                  @aloo31124
+/infra/oauth-worker/       @aloo31124
+/scripts/                  @aloo31124
+/eleventy.config.js        @aloo31124

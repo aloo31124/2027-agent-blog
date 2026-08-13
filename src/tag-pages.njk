@@ -1,0 +1,37 @@
+---
+layout: layouts/base.njk
+eleventyExcludeFromCollections: true
+pagination:
+  data: collections.publicTags
+  size: 1
+  alias: tag
+permalink: "/tags/{{ tag.slug }}/index.html"
+eleventyComputed:
+  title: "標籤：{{ tag.name }}"
+  description: "標記為「{{ tag.name }}」的所有文章。"
+---
+{#- 每個公開標籤一頁。collections.publicTags 已排除草稿與保留標記，
+    因此不會為「只有草稿使用」的標籤產生頁面（FR-011、FR-018）。 -#}
+<h1>標籤：{{ tag.name }}</h1>
+
+<p class="post-meta">共 {{ tag.posts.length }} 篇文章</p>
+
+{% if tag.posts.length %}
+  <ul class="post-list">
+    {%- for post in tag.posts %}
+      <li>
+        <h2><a href="{{ post.url | url }}">{{ post.data.title }}</a></h2>
+        <p class="post-meta">
+          <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time>
+        </p>
+        <p class="post-summary">{{ post.data.description }}</p>
+      </li>
+    {%- endfor %}
+  </ul>
+{% else %}
+  <div class="empty-state">
+    <p>這個標籤目前沒有已發佈的文章。</p>
+  </div>
+{% endif %}
+
+<p><a href="{{ '/tags/' | url }}">← 回到所有標籤</a></p>

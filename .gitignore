@@ -1,0 +1,22 @@
+# 相依套件
+node_modules/
+
+# 建置產物
+_site/
+
+# 環境變數與機密（OAuth client secret 絕不進版控）
+.env
+.env.*
+infra/oauth-worker/.dev.vars
+infra/oauth-worker/.wrangler/
+
+# 編輯器與作業系統
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# 記錄檔
+*.log
+npm-debug.log*
